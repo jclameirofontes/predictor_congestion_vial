@@ -15,6 +15,7 @@ ipykernel==6.29.5
 ipython==9.0.2
 ipython_pygments_lexers==1.1.1
 jedi==0.19.2
+joblib
 jupyter_client==8.6.3
 jupyter_core==5.7.2
 kiwisolver==1.4.8
