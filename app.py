@@ -100,8 +100,8 @@ with col1:
 with col2:
     if not os.path.exists("mapa/MAPA FINAL/temp_map.html"):
         m = folium.Map(location=[40.4168, -3.7038], zoom_start=12)
-        m.save("mapa/MAPA FINAL/temp_map.html")
+        m.save("MAPA FINAL/temp_map.html")
 
-    with open("mapa/MAPA FINAL/temp_map.html", 'r', encoding='utf-8') as f:
+    with open("MAPA FINAL/temp_map.html", 'r', encoding='utf-8') as f:
         default_map = f.read()
         html(default_map, height=1275)
