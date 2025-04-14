@@ -5,7 +5,8 @@ from sistema_predictivo import estimar_carga_para_ruta
 import os
 import folium
 from streamlit.components.v1 import html
-
+import lightgbm
+print("💡 Versión de LightGBM:", lightgbm.__version__)
 # Configuración de página
 st.set_page_config(
     page_title="Predictor de Congestión Vial",
