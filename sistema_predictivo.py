@@ -233,7 +233,7 @@ def visualizar_ruta(coordenadas_ruta, puntos_medicion):
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     nombre_archivo = f"ruta_mapa_{timestamp}.html"
-    ruta_salida = os.path.join("C:/Users/jcool/OneDrive/Escritorio/TFG/Código/MAPA FINAL", nombre_archivo)
+    ruta_salida = os.path.join("mapas/MAPA FINAL", nombre_archivo)
     mapa.save(ruta_salida)
     print(f"🗺️ Mapa guardado como '{ruta_salida}'. Ábrelo en un navegador para verlo.")
 
