@@ -80,6 +80,12 @@ def filtrar_puntos_medicion(df_puntos, bounding_box, max_puntos=1000):
     return df_filtrado.head(max_puntos)
 
 def obtener_coordenadas_ruta(origen, destino, modo="DRIVE", distancia_minima=8):
+    # 👇 Autocompletar con ", Madrid" si no se especifica ciudad
+    if "madrid" not in origen.lower():
+        origen += ", Madrid"
+    if "madrid" not in destino.lower():
+        destino += ", Madrid"
+
     print("🌐 Solicitando coordenadas de ruta...")
     url = "https://routes.googleapis.com/directions/v2:computeRoutes"
     headers = {
@@ -94,11 +100,14 @@ def obtener_coordenadas_ruta(origen, destino, modo="DRIVE", distancia_minima=8):
     }
     response = requests.post(url, headers=headers, json=body)
     print("🌐 Estado de la respuesta:", response.status_code)
+
     if response.status_code != 200:
         print("❌ Error al obtener ruta:", response.text)
         return f"Error en la API: {response.status_code}, {response.text}"
+
     data = response.json()
     coordenadas_ruta = []
+
     if "routes" in data and data["routes"]:
         for leg in data["routes"][0]["legs"]:
             for step in leg["steps"]:
@@ -111,8 +120,13 @@ def obtener_coordenadas_ruta(origen, destino, modo="DRIVE", distancia_minima=8):
                         coordenadas_ruta.extend(interpolar_puntos(puntos[i], puntos[i + 1], distancia_minima))
                 else:
                     coordenadas_ruta.extend(puntos)
+
+    if not coordenadas_ruta:
+        raise ValueError("❌ No se pudo obtener una ruta válida. ¿Las direcciones son correctas?")
+
     print("✅ Coordenadas de ruta obtenidas:", len(coordenadas_ruta))
     return coordenadas_ruta
+
 
 
 def encontrar_puntos_de_medicion(coordenadas_ruta, df_puntos, radio_metros=6):
