@@ -6,7 +6,22 @@ import os
 import folium
 from streamlit.components.v1 import html
 
+# Configuración de página
+st.set_page_config(
+    page_title="Predictor de Congestión Vial",
+    layout="wide"
+)
 
+# Título y descripción
+col1, col2 = st.columns([1, 2])
+
+with col1:
+    st.markdown("## 🚦 Predictor de Congestión Vial en Madrid")
+    st.markdown("""
+        Completa los campos para estimar la carga de tráfico.  
+        Los campos marcados con *️⃣ son obligatorios.
+    """)
+    
     origen = st.text_input("📍 Dirección de Origen *", "")
     destino = st.text_input("🏁 Dirección de Destino *", "")
     hora = st.time_input("⏰ Hora de salida *", value=time(0, 0))
