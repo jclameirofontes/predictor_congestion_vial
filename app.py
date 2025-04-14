@@ -6,8 +6,22 @@ import os
 import folium
 from streamlit.components.v1 import html
 
-# Configuración de página
-st.set_page_config(page_title="Predictor de Congestión Vial", layout="wide")
+# Forzar modo claro (tema claro con fondo blanco)
+st.set_page_config(
+    page_title="Predictor de Congestión Vial",
+    layout="wide",
+    initial_sidebar_state="auto"
+)
+
+# Estilo para fondo blanco
+st.markdown("""
+    <style>
+        body, .main, .block-container {
+            background-color: white !important;
+            color: black !important;
+        }
+    </style>
+""", unsafe_allow_html=True)
 
 # Estilos personalizados
 st.markdown("""
