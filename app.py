@@ -6,60 +6,6 @@ import os
 import folium
 from streamlit.components.v1 import html
 
-# Forzar modo claro (tema claro con fondo blanco)
-st.set_page_config(
-    page_title="Predictor de Congestión Vial",
-    layout="wide",
-    initial_sidebar_state="auto"
-)
-
-# Estilo para fondo blanco
-st.markdown("""
-    <style>
-        body, .main, .block-container {
-            background-color: white !important;
-            color: black !important;
-        }
-    </style>
-""", unsafe_allow_html=True)
-
-# Estilos personalizados
-st.markdown("""
-    <style>
-        body {
-            background-color: white;
-            color: black;
-        }
-        .block-container {
-            padding-top: 2rem;
-        }
-        h1, h2 {
-            font-weight: bold;
-            color: black;
-        }
-        span.required-star {
-            color: red !important;
-        }
-        /* Forzar estilos directamente sobre los labels de input, select y time */
-        label[data-testid="stMarkdownContainer"] > div {
-            font-size: 1.3rem !important;
-            font-weight: bold !important;
-            color: #333333 !important;
-        }
-    </style>
-""", unsafe_allow_html=True)
-
-col1, col2 = st.columns([1, 2])
-
-with col1:
-    st.markdown("""
-        <h1 style='font-size: 2.5rem; margin-bottom: 0;'>🚦 Predictor de Congestión Vial en Madrid</h1>
-    """, unsafe_allow_html=True)
-    st.markdown("""
-        <p style='color: black; font-size: 1.1rem;'>
-            Completa los campos para estimar la carga de tráfico. Los campos marcados con <span class='required-star'>*</span> son obligatorios.
-        </p>
-    """, unsafe_allow_html=True)
 
     origen = st.text_input("📍 Dirección de Origen *", "")
     destino = st.text_input("🏁 Dirección de Destino *", "")
