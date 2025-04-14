@@ -7,6 +7,6 @@ requests
 geopy
 shapely
 folium
-lightgbm
+lightgbm == 4.6.0
 matplotlib
 scipy
