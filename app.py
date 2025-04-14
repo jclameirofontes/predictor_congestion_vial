@@ -98,10 +98,10 @@ with col1:
                     st.error(f"Error al estimar la congestión: {e}")
 
 with col2:
-    if not os.path.exists("C:/Users/jcool/OneDrive/Escritorio/TFG/Código/MAPA FINAL/temp_map.html"):
+    if not os.path.exists("mapa/MAPA FINAL/temp_map.html"):
         m = folium.Map(location=[40.4168, -3.7038], zoom_start=12)
-        m.save("C:/Users/jcool/OneDrive/Escritorio/TFG/Código/MAPA FINAL/temp_map.html")
+        m.save("mapa/MAPA FINAL/temp_map.html")
 
-    with open("C:/Users/jcool/OneDrive/Escritorio/TFG/Código/MAPA FINAL/temp_map.html", 'r', encoding='utf-8') as f:
+    with open("mapa/MAPA FINAL/temp_map.html", 'r', encoding='utf-8') as f:
         default_map = f.read()
         html(default_map, height=1275)
