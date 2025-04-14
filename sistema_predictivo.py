@@ -18,9 +18,9 @@ from scipy.spatial import cKDTree
 API_KEY = "AIzaSyA2rbw0-kRC3bIoU3-ycgPGZ79zXN2RFvI"
 gmaps = googlemaps.Client(key=API_KEY)
 
-ruta_modelos = "C:/Users/jcool/OneDrive/Escritorio/TFG/Código/modelos"
-carga_media = pd.read_parquet("C:/Users/jcool/OneDrive/Escritorio/TFG/Código/id_carga_media.parquet")
-ruta_coordenadas_trafico = "C:/Users/jcool/OneDrive/Escritorio/TFG/Código/df_coordenadas.parquet"
+ruta_modelos = "modelos"
+carga_media = pd.read_parquet("id_carga_media.parquet")
+ruta_coordenadas_trafico = "df_coordenadas.parquet"
 df_coordenadas_trafico_default = pd.read_parquet(ruta_coordenadas_trafico)
 
 def hora_a_sin_cos(hora_str):
