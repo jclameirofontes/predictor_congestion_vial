@@ -37,41 +37,46 @@ with col1:
     dir_viento = st.text_input("🧭 Dirección del viento (º) (entre 0 y 359)", "")
 
 st.markdown("---")
-boton_col1, boton_col2 = st.columns([6, 1])
-with boton_col2:
-    if st.button("▶️ Estimar congestión"):
-        if origen.strip() == "" or destino.strip() == "":
-            st.error("Por favor, completa las direcciones de origen y destino.")
-        else:
-            with st.spinner("🔄 Procesando predicción..."):
-                try:
-                    semana_valor = 1 if semana == "Sí" else 0
-                    lluvia_valor = 1 if lluvia == "Sí" else 0
-                    _, puntos, ruta_html = estimar_carga_para_ruta(
-                        origen=origen,
-                        destino=destino,
-                        hora=hora.strftime("%H:%M"),
-                        ES_ENTRE_SEMANA=semana_valor,
-                        TEMPERATURA=None if temp.upper() == "NA" or temp.strip() == "" else float(temp),
-                        HUMEDAD=None if humedad.upper() == "NA" or humedad.strip() == "" else float(humedad),
-                        PRESION=None if presion.upper() == "NA" or presion.strip() == "" else float(presion),
-                        RADIACION=None if radiacion.upper() == "NA" or radiacion.strip() == "" else float(radiacion),
-                        VELOCIDAD_VIENTO=None if v_viento.upper() == "NA" or v_viento.strip() == "" else float(v_viento),
-                        DIR_VIENTO=None if dir_viento.upper() == "NA" or dir_viento.strip() == "" else float(dir_viento),
-                        PRECIPITA_BINARIA=lluvia_valor,
-                        df_coordenadas_trafico=None
-                    )
 
-                    if os.path.exists(ruta_html):
-                        with open(ruta_html, 'r', encoding='utf-8') as f:
-                            html_content = f.read()
-                            st.success("✅ Predicción completada. Mapa generado.")
-                            with col2:
-                                html(html_content, height=1600)
-                    else:
-                        st.error("No se encontró el archivo del mapa generado.")
-                except Exception as e:
-                    st.error(f"Error al estimar la congestión: {e}")
+with st.container():
+    boton_col1, boton_col2 = st.columns([5, 1])
+    with boton_col2:
+        estimar = st.button("▶️ Estimar congestión")
+
+if estimar:
+    if origen.strip() == "" or destino.strip() == "":
+        st.error("Por favor, completa las direcciones de origen y destino.")
+    else:
+        with st.spinner("🔄 Procesando predicción..."):
+            try:
+                semana_valor = 1 if semana == "Sí" else 0
+                lluvia_valor = 1 if lluvia == "Sí" else 0
+
+                _, puntos, ruta_html = estimar_carga_para_ruta(
+                    origen=origen,
+                    destino=destino,
+                    hora=hora.strftime("%H:%M"),
+                    ES_ENTRE_SEMANA=semana_valor,
+                    TEMPERATURA=None if temp.upper() == "NA" or temp.strip() == "" else float(temp),
+                    HUMEDAD=None if humedad.upper() == "NA" or humedad.strip() == "" else float(humedad),
+                    PRESION=None if presion.upper() == "NA" or presion.strip() == "" else float(presion),
+                    RADIACION=None if radiacion.upper() == "NA" or radiacion.strip() == "" else float(radiacion),
+                    VELOCIDAD_VIENTO=None if v_viento.upper() == "NA" or v_viento.strip() == "" else float(v_viento),
+                    DIR_VIENTO=None if dir_viento.upper() == "NA" or dir_viento.strip() == "" else float(dir_viento),
+                    PRECIPITA_BINARIA=lluvia_valor,
+                    df_coordenadas_trafico=None
+                )
+
+                if os.path.exists(ruta_html):
+                    with open(ruta_html, 'r', encoding='utf-8') as f:
+                        html_content = f.read()
+                        st.success("✅ Predicción completada. Mapa generado.")
+                        with col2:
+                            html(html_content, height=1600)
+                else:
+                    st.error("No se encontró el archivo del mapa generado.")
+            except Exception as e:
+                st.error(f"Error al estimar la congestión: {e}")
 
 with col2:
     if not os.path.exists("mapa/MAPA FINAL/temp_map.html"):
