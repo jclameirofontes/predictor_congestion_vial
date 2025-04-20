@@ -28,15 +28,35 @@ with col1:
     lluvia = st.selectbox("¿Está lloviendo? *", ["No", "Sí"])
 
     st.markdown("---")
-    temp = st.text_input("🌡️ Temperatura (ºC) (entre 3.25 y 22.85 o 'NA')", "")
-    humedad = st.text_input("💧 Humedad (%) (entre 33 y 100 o 'NA')", "")
-    presion = st.text_input("📘 Presión (mb) (entre 933.43 y 968 o 'NA')", "")
-    radiacion = st.text_input("☀️ Radiación solar (W/m2) (entre 0 y 705 o 'NA')", "")
-    v_viento = st.text_input("🍃 Velocidad del viento (m/s) (entre 0 y 4.775 o 'NA')", "")
-    dir_viento = st.text_input("🧭 Dirección del viento (º) (entre 0 y 359 o 'NA')", "")
+    temp = st.text_input("🌡️ Temperatura (ºC) (entre 3.25 y 22.85)", "")
+    humedad = st.text_input("💧 Humedad (%) (entre 33 y 100)", "")
+    presion = st.text_input("📘 Presión (mb) (entre 933.43 y 968)", "")
+    radiacion = st.text_input("☀️ Radiación solar (W/m2) (entre 0 y 705)", "")
+    v_viento = st.text_input("🍃 Velocidad del viento (m/s) (entre 0 y 4.775)", "")
+    dir_viento = st.text_input("🧭 Dirección del viento (º) (entre 0 y 359)", "")
 
     st.markdown("---")
-    if st.button("▶️ Estimar congestión"):
+
+# Estilo personalizado para botón
+st.markdown("""
+<style>
+div.stButton > button {
+    background-color: #b5e7a0;
+    color: black;
+    font-weight: bold;
+    font-size: 18px;
+    border: 3px solid black;
+    border-radius: 10px;
+    padding: 0.5em 1.5em;
+    width: 100%;
+    margin-top: 10px;
+}
+</style>
+""", unsafe_allow_html=True)
+
+estimar = st.button("▶️ Estimar congestión")
+
+if estimar:
         if origen.strip() == "" or destino.strip() == "":
             st.error("Por favor, completa las direcciones de origen y destino.")
         else:
