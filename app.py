@@ -36,9 +36,7 @@ with col1:
     dir_viento = st.text_input("🧭 Dirección del viento (º) (entre 0 y 359)", "")
 
     st.markdown("---")
-
-if st.button("▶️ Estimar congestión"):
-
+    if st.button("▶️ Estimar congestión"):
         if origen.strip() == "" or destino.strip() == "":
             st.error("Por favor, completa las direcciones de origen y destino.")
         else:
@@ -81,3 +79,4 @@ with col2:
     with open("MAPA FINAL/temp_map.html", 'r', encoding='utf-8') as f:
         default_map = f.read()
         html(default_map, height=1275)
+
