@@ -29,14 +29,16 @@ with col1:
     lluvia = st.selectbox("¿Está lloviendo? *", ["No", "Sí"])
 
     st.markdown("---")
-    temp = st.text_input("🌡️ Temperatura (ºC) (entre 3.25 y 22.85 o 'NA')", "")
-    humedad = st.text_input("💧 Humedad (%) (entre 33 y 100 o 'NA')", "")
-    presion = st.text_input("📘 Presión (mb) (entre 933.43 y 968 o 'NA')", "")
-    radiacion = st.text_input("☀️ Radiación solar (W/m2) (entre 0 y 705 o 'NA')", "")
-    v_viento = st.text_input("🍃 Velocidad del viento (m/s) (entre 0 y 4.775 o 'NA')", "")
-    dir_viento = st.text_input("🧭 Dirección del viento (º) (entre 0 y 359 o 'NA')", "")
+    temp = st.text_input("🌡️ Temperatura (ºC) (entre 3.25 y 22.85)", "")
+    humedad = st.text_input("💧 Humedad (%) (entre 33 y 100)", "")
+    presion = st.text_input("📘 Presión (mb) (entre 933.43 y 968)", "")
+    radiacion = st.text_input("☀️ Radiación solar (W/m2) (entre 0 y 705)", "")
+    v_viento = st.text_input("🍃 Velocidad del viento (m/s) (entre 0 y 4.775)", "")
+    dir_viento = st.text_input("🧭 Dirección del viento (º) (entre 0 y 359)", "")
 
-    st.markdown("---")
+ st.markdown("---")
+boton_col1, boton_col2 = st.columns([6, 1])
+with boton_col2:
     if st.button("▶️ Estimar congestión"):
         if origen.strip() == "" or destino.strip() == "":
             st.error("Por favor, completa las direcciones de origen y destino.")
@@ -45,7 +47,6 @@ with col1:
                 try:
                     semana_valor = 1 if semana == "Sí" else 0
                     lluvia_valor = 1 if lluvia == "Sí" else 0
-
                     _, puntos, ruta_html = estimar_carga_para_ruta(
                         origen=origen,
                         destino=destino,
