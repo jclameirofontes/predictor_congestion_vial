@@ -36,7 +36,7 @@ with col1:
     v_viento = st.text_input("🍃 Velocidad del viento (m/s) (entre 0 y 4.775)", "")
     dir_viento = st.text_input("🧭 Dirección del viento (º) (entre 0 y 359)", "")
 
- st.markdown("---")
+st.markdown("---")
 boton_col1, boton_col2 = st.columns([6, 1])
 with boton_col2:
     if st.button("▶️ Estimar congestión"):
