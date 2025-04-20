@@ -37,7 +37,6 @@ with col1:
 
     st.markdown("---")
 
-st.markdown("---")
 if st.button("▶️ Estimar congestión"):
 
         if origen.strip() == "" or destino.strip() == "":
