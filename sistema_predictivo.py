@@ -10,7 +10,6 @@ from shapely.geometry import Point
 import folium
 from folium import DivIcon
 from lightgbm import LGBMRegressor
-import matplotlib.pyplot as plt
 from datetime import datetime
 from scipy.spatial import cKDTree
 
