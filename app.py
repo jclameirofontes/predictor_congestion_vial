@@ -37,26 +37,9 @@ with col1:
 
     st.markdown("---")
 
-# Estilo personalizado para botón
-st.markdown("""
-<style>
-div.stButton > button {
-    background-color: #b5e7a0;
-    color: black;
-    font-weight: bold;
-    font-size: 18px;
-    border: 3px solid black;
-    border-radius: 10px;
-    padding: 0.5em 1.5em;
-    width: 100%;
-    margin-top: 10px;
-}
-</style>
-""", unsafe_allow_html=True)
+st.markdown("---")
+if st.button("▶️ Estimar congestión"):
 
-estimar = st.button("▶️ Estimar congestión")
-
-if estimar:
         if origen.strip() == "" or destino.strip() == "":
             st.error("Por favor, completa las direcciones de origen y destino.")
         else:
