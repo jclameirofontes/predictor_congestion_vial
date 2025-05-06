@@ -183,21 +183,17 @@ def predecir_para_puntos(puntos_cercanos, datos_contexto):
 
 def obtener_tiempo_sin_trafico(origen, destino):
     try:
-        # Forzar una hora FUTURA (ej: +1 día a las 3:00 AM)
-        future_time = datetime.now() + timedelta(days=1)
-        future_time = future_time.replace(hour=3, minute=0, second=0, microsecond=0)
-
         directions = gmaps.directions(
             origen,
             destino,
-            mode="driving",
-            departure_time=future_time
+            mode="driving"
         )
         if directions and directions[0].get("legs"):
-            return directions[0]["legs"][0]["duration"]["value"] / 60
+            return directions[0]["legs"][0]["duration"]["value"] / 60  # en minutos
     except Exception as e:
         print(f"❌ Error al obtener tiempo sin tráfico: {e}")
     return None
+
 
 
 
