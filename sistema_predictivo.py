@@ -5,7 +5,6 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 import joblib
 import os
-import xgboost as xgb
 from lightgbm import LGBMRegressor
 import googlemaps
 import requests
