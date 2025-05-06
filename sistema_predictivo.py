@@ -179,7 +179,6 @@ def predecir_para_puntos(puntos_cercanos, datos_contexto):
     return puntos_cercanos
 
 def obtener_tiempo_sin_trafico(origen, destino):
-    from datetime import datetime
     try:
         directions = gmaps.directions(
             origen,
@@ -187,11 +186,21 @@ def obtener_tiempo_sin_trafico(origen, destino):
             mode="driving",
             departure_time=datetime.now().replace(hour=3, minute=0, second=0, microsecond=0)
         )
-        if directions and "legs" in directions[0]:
-            return directions[0]["legs"][0]["duration"]["value"] / 60  # minutos
+        print("📡 API response:", directions)  # 👈 este print va después de la llamada
+
+        if not directions:
+            print("❌ API no devolvió resultados.")
+            return None
+
+        if directions[0].get("legs"):
+            return directions[0]["legs"][0]["duration"]["value"] / 60
+
     except Exception as e:
         print(f"❌ Error al obtener tiempo sin tráfico: {e}")
     return None
+
+
+
 
 
 def penalizacion_por_carga(carga):
