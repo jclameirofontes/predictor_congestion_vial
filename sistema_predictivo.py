@@ -178,7 +178,41 @@ def predecir_para_puntos(puntos_cercanos, datos_contexto):
     print("✅ Predicciones realizadas para:", list(predicciones.keys()))
     return puntos_cercanos
 
-def visualizar_ruta(coordenadas_ruta, puntos_medicion):
+def obtener_tiempo_sin_trafico(origen, destino):
+    from datetime import datetime
+    try:
+        directions = gmaps.directions(
+            origen,
+            destino,
+            mode="driving",
+            departure_time=datetime.now().replace(hour=3, minute=0, second=0, microsecond=0)
+        )
+        if directions and "legs" in directions[0]:
+            return directions[0]["legs"][0]["duration"]["value"] / 60  # minutos
+    except Exception as e:
+        print(f"❌ Error al obtener tiempo sin tráfico: {e}")
+    return None
+
+
+def penalizacion_por_carga(carga):
+    if carga < 0.3:
+        return 1.0
+    elif carga < 0.5:
+        return 1.05
+    elif carga < 0.7:
+        return 1.15
+    elif carga < 0.85:
+        return 1.3
+    elif carga < 0.95:
+        return 1.6
+    else:
+        return 2.0
+
+def visualizar_ruta(coordenadas_ruta, puntos_medicion, tiempo_sin_trafico):
+    import numpy as np
+    import folium
+    from shapely.geometry import Point
+
     if not coordenadas_ruta or isinstance(coordenadas_ruta, str):
         print("No se puede visualizar la ruta: No hay datos válidos.")
         return
@@ -190,6 +224,11 @@ def visualizar_ruta(coordenadas_ruta, puntos_medicion):
 
     mapa = folium.Map(location=coordenadas_ruta[0], zoom_start=14)
 
+    puntos_con_carga = [
+        (Point(info["longitud"], info["latitud"]), info.get("prediccion", 0.0))
+        for info in puntos_medicion.values()
+    ]
+
     def color_por_carga(carga):
         if carga <= 0.2:
             return "green"
@@ -200,12 +239,8 @@ def visualizar_ruta(coordenadas_ruta, puntos_medicion):
         else:
             return "red"
 
-    puntos_con_carga = [
-        (Point(info["longitud"], info["latitud"]), info.get("prediccion", 0.0))
-        for info in puntos_medicion.values()
-    ]
-
     distancia_maxima_metros = 1000
+
     for i in range(len(coordenadas_ruta) - 1):
         p1 = coordenadas_ruta[i]
         p2 = coordenadas_ruta[i + 1]
@@ -230,19 +265,41 @@ def visualizar_ruta(coordenadas_ruta, puntos_medicion):
             color = color_por_carga(pred)
             popup_texto = f"{datos['nombre']}<br>(ID: {id_punto})<br><b>Carga estimada:</b> {pred:.3f}<br><b>Grupo:</b> {grupo}"
 
-            html_icon = (
-                f'<div style="background-color:{color};border-radius:50%;color:white;font-size:10pt;'
-                f'font-weight:bold;text-align:center;width:24px;height:24px;line-height:24px;">{grupo}</div>'
-            )
-
             folium.Marker(
                 location=(datos["latitud"], datos["longitud"]),
                 popup=folium.Popup(popup_texto, max_width=300),
-                icon=folium.DivIcon(html=html_icon)
+                icon=folium.DivIcon(html=f"""
+                    <div style="
+                        background-color:{color};
+                        border-radius:50%;
+                        color:white;
+                        font-size:10pt;
+                        font-weight:bold;
+                        text-align:center;
+                        width:24px;
+                        height:24px;
+                        line-height:24px;">
+                        {grupo}
+                    </div>""")
             ).add_to(mapa)
 
     folium.Marker(coordenadas_ruta[0], popup="Inicio", icon=folium.Icon(color="green", icon="play", prefix="fa")).add_to(mapa)
     folium.Marker(coordenadas_ruta[-1], popup="Destino", icon=folium.Icon(color="red", icon="flag-checkered", prefix="fa")).add_to(mapa)
+
+    penalizaciones = [penalizacion_por_carga(datos["prediccion"]) for datos in puntos_medicion.values()]
+    carga_media = np.mean([datos["prediccion"] for datos in puntos_medicion.values()])
+    factor_penalizacion = np.mean(penalizaciones)
+    tiempo_con_trafico = tiempo_sin_trafico * factor_penalizacion
+
+    html_info = f"""
+    <div style='position: fixed; top: 10px; left: 50px; z-index: 9999; background-color: white;
+                border: 2px solid #444; padding: 10px; border-radius: 8px; font-size: 14px;'>
+        ⏱️ <b>Tiempo estimado:</b> {tiempo_con_trafico:.1f} min<br>
+        🚗 <b>Tiempo sin tráfico:</b> {tiempo_sin_trafico:.1f} min<br>
+        📊 <b>Carga media:</b> {carga_media:.2f}
+    </div>
+    """
+    mapa.get_root().html.add_child(folium.Element(html_info))
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     nombre_archivo = f"ruta_mapa_{timestamp}.html"
@@ -298,6 +355,7 @@ def estimar_carga_para_ruta(origen, destino, hora="09:00", ES_ENTRE_SEMANA=1,
 
     puntos_cercanos = encontrar_puntos_de_medicion(coordenadas_ruta, df_filtrado)
     puntos_con_predicciones = predecir_para_puntos(puntos_cercanos, contexto)
-    ruta_mapa = visualizar_ruta(coordenadas_ruta, puntos_con_predicciones)
+    tiempo_sin_trafico = obtener_tiempo_sin_trafico(origen, destino)
+    ruta_mapa = visualizar_ruta(coordenadas_ruta, puntos_con_predicciones, tiempo_sin_trafico)
     print("🎯 Estimación finalizada")
     return coordenadas_ruta, puntos_con_predicciones, ruta_mapa
