@@ -13,7 +13,7 @@ import folium
 from folium import DivIcon
 from shapely.geometry import Point
 from scipy.spatial import cKDTree
-
+from datetime import datetime, timedelta
 
 
 API_KEY = "AIzaSyA2rbw0-kRC3bIoU3-ycgPGZ79zXN2RFvI"
@@ -180,26 +180,25 @@ def predecir_para_puntos(puntos_cercanos, datos_contexto):
     print("✅ Predicciones realizadas para:", list(predicciones.keys()))
     return puntos_cercanos
 
+
 def obtener_tiempo_sin_trafico(origen, destino):
     try:
+        # Forzar una hora FUTURA (ej: +1 día a las 3:00 AM)
+        future_time = datetime.now() + timedelta(days=1)
+        future_time = future_time.replace(hour=3, minute=0, second=0, microsecond=0)
+
         directions = gmaps.directions(
             origen,
             destino,
             mode="driving",
-            departure_time=datetime.now().replace(hour=3, minute=0, second=0, microsecond=0)
+            departure_time=future_time
         )
-        print("📡 API response:", directions)  # 👈 este print va después de la llamada
-
-        if not directions:
-            print("❌ API no devolvió resultados.")
-            return None
-
-        if directions[0].get("legs"):
+        if directions and directions[0].get("legs"):
             return directions[0]["legs"][0]["duration"]["value"] / 60
-
     except Exception as e:
         print(f"❌ Error al obtener tiempo sin tráfico: {e}")
     return None
+
 
 
 
