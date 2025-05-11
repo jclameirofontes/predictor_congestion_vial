@@ -36,6 +36,7 @@ with col1:
     dir_viento = st.text_input("🧭 Dirección del viento (º) (entre 0 y 359)", "")
 
     st.markdown("---")
+    # Dentro del if st.button(...) 
     if st.button("▶️ Estimar congestión"):
         if origen.strip() == "" or destino.strip() == "":
             st.error("Por favor, completa las direcciones de origen y destino.")
@@ -44,7 +45,7 @@ with col1:
                 try:
                     semana_valor = 1 if semana == "Sí" else 0
                     lluvia_valor = 1 if lluvia == "Sí" else 0
-
+    
                     _, puntos, ruta_html = estimar_carga_para_ruta(
                         origen=origen,
                         destino=destino,
@@ -59,24 +60,25 @@ with col1:
                         PRECIPITA_BINARIA=lluvia_valor,
                         df_coordenadas_trafico=None
                     )
-
+    
                     if os.path.exists(ruta_html):
                         with open(ruta_html, 'r', encoding='utf-8') as f:
                             html_content = f.read()
                             st.success("✅ Predicción completada. Mapa generado.")
                             with col2:
-                                html(html_content, height=1600)
+                                html(html_content, height=1250)
                     else:
                         st.error("No se encontró el archivo del mapa generado.")
                 except Exception as e:
                     st.error(f"Error al estimar la congestión: {e}")
-
-with col2:
-    if not os.path.exists("mapa/MAPA FINAL/temp_map.html"):
-        m = folium.Map(location=[40.4168, -3.7038], zoom_start=12)
-        m.save("MAPA FINAL/temp_map.html")
-
-    with open("MAPA FINAL/temp_map.html", 'r', encoding='utf-8') as f:
-        default_map = f.read()
-        html(default_map, height=1275)
-
+    
+    else:
+        with col2:
+            if not os.path.exists("MAPA FINAL/temp_map.html"):
+                m = folium.Map(location=[40.4168, -3.7038], zoom_start=12)
+                m.save("MAPA FINAL/temp_map.html")
+    
+            with open("MAPA FINAL/temp_map.html", 'r', encoding='utf-8') as f:
+                default_map = f.read()
+                html(default_map, height=1250)
+    
