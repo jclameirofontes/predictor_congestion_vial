@@ -184,6 +184,7 @@ def predecir_para_puntos(puntos_cercanos, datos_contexto):
 
 
 def obtener_tiempo_sin_trafico(origen, destino):
+    from datetime import datetime
     try:
         # Fecha actual
         hoy = datetime.datetime.now()
