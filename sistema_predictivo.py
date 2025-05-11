@@ -177,47 +177,109 @@ def predecir_para_puntos(puntos_cercanos, datos_contexto):
         puntos_cercanos[id_punto]["prediccion"] = pred
         puntos_cercanos[id_punto]["grupo"] = grupo
         predicciones[id_punto] = pred
+        puntos_cercanos[id_punto]["id_target"] = id_target
     print("✅ Predicciones realizadas para:", list(predicciones.keys()))
     return puntos_cercanos
 
 
 def obtener_tiempo_sin_trafico(origen, destino):
     try:
+        # Fecha actual
+        hoy = datetime.datetime.now()
+
+        # Calcular cuántos días faltan para el próximo domingo
+        dias_hasta_domingo = (6 - hoy.weekday()) % 7  # weekday(): lunes=0, domingo=6
+        if dias_hasta_domingo == 0:
+            dias_hasta_domingo = 7  # si hoy es domingo, ir al siguiente
+
+        # Crear datetime para el próximo domingo a las 4:00 a.m.
+        proximo_domingo = hoy + datetime.timedelta(days=dias_hasta_domingo)
+        hora_baja = proximo_domingo.replace(hour=4, minute=0, second=0, microsecond=0)
+
         directions = gmaps.directions(
             origen,
             destino,
-            mode="driving"
+            mode="driving",
+            departure_time=hora_baja
         )
+
         if directions and directions[0].get("legs"):
-            return directions[0]["legs"][0]["duration"]["value"] / 60  # en minutos
+            leg = directions[0]["legs"][0]
+            tiempo_ideal = leg["duration_in_traffic"]["value"] / 60  # en minutos
+            return tiempo_ideal
     except Exception as e:
-        print(f"❌ Error al obtener tiempo sin tráfico: {e}")
+        print(f"❌ Error al obtener tiempo sin tráfico (domingo 4AM): {e}")
     return None
 
+# Función para boxplot sobrepuesto con predicciones
+def generar_boxplot_superpuesto(cargas, ruta_base="carga_coloreada.png", salida="boxplot_superpuesto.png"):
+    colores = [color_por_carga(c) for c in cargas]
 
+    img = Image.open(ruta_base)
+    fig, ax = plt.subplots(figsize=(9, 6))
+    ax.imshow(img, extent=[0, 1, 0, 1], aspect='auto')
+    ax.axis("off")
 
+    # Segundo eje para boxplot
+    ax2 = ax.inset_axes([0.103, 0.54, 0.862, 0.123])
+    ax2.set_ylim(0, 2)
+    ax2.set_xlim(0, 1)
+    ax2.set_xlim(-0.03, 1.03)
+    ax2.set_ylim(-1, 2)
+    ax2.axis("off")
 
+    # Coordenada vertical centrada (0.5 es medio)
+    y_pos = 0.1
 
+    box = ax2.boxplot(
+        [cargas],
+        positions=[y_pos],
+        vert=False,
+        widths=2,
+        whis=[0, 100],  # fuerza que los whiskers vayan del mínimo al máximo
+        patch_artist=True,
+        boxprops=dict(facecolor='lightgray', color='black', linewidth=1.5),
+        medianprops=dict(color='black', linewidth=1.5),
+        whiskerprops=dict(color='black', linewidth=1.5),
+        capprops=dict(color='black', linewidth=1.5),
+        flierprops=dict(marker='o', markerfacecolor='black', markeredgecolor='black')
+    )
 
+    for c, col in zip(cargas, colores):
+        ax2.plot(c, y_pos, 'o', color=col, markersize=8, markeredgecolor='black')
 
-def penalizacion_por_carga(carga):
-    if carga < 0.3:
-        return 1.0
-    elif carga < 0.5:
-        return 1.05
-    elif carga < 0.7:
-        return 1.15
-    elif carga < 0.85:
-        return 1.3
-    elif carga < 0.95:
-        return 1.6
+        # Texto descriptivo sobre la mediana
+    # Texto descriptivo sobre la mediana
+    mediana = np.median(cargas)
+    if mediana <= 0.2:
+        texto = "CARGA BAJA"
+    elif mediana <= 0.3:
+        texto = "CARGA MODERADA"
+    elif mediana <= 0.5:
+        texto = "CARGA ALTA"
     else:
-        return 2.0
+        texto = "CARGA MUY ALTA"
+
+    color_margen = color_por_carga(mediana)
+
+    ax2.text(mediana, y_pos + 2, texto,
+            ha='center', va='bottom', fontsize=18,
+            bbox=dict(facecolor=color_margen, edgecolor='black', boxstyle='round,pad=0.3'),
+            color='black', weight='bold')
+
+    plt.tight_layout()
+    fig.savefig(salida, dpi=300, bbox_inches='tight')
+    plt.close()
+    print(f"📊 Boxplot generado correctamente como: {salida}")
+
 
 def visualizar_ruta(coordenadas_ruta, puntos_medicion, tiempo_sin_trafico):
     import numpy as np
     import folium
     from shapely.geometry import Point
+    import matplotlib.pyplot as plt
+    from PIL import Image
+    import base64
 
     if not coordenadas_ruta or isinstance(coordenadas_ruta, str):
         print("No se puede visualizar la ruta: No hay datos válidos.")
@@ -267,10 +329,21 @@ def visualizar_ruta(coordenadas_ruta, puntos_medicion, tiempo_sin_trafico):
     for id_punto, datos in puntos_medicion.items():
         pred = datos.get("prediccion")
         grupo = datos.get("grupo", "?")
+        id_target = datos.get("id_target")
         if pred is not None:
             color = color_por_carga(pred)
-            popup_texto = f"{datos['nombre']}<br>(ID: {id_punto})<br><b>Carga estimada:</b> {pred:.3f}<br><b>Grupo:</b> {grupo}"
-
+            carga_media_text = f"{id_target:.3f}" if id_target is not None else "N/A"
+            popup_texto = f"""
+                <b>{datos['nombre']}</b><br>
+                (ID: {id_punto})<br>
+                Grupo: {grupo}<br>
+                Carga media: {carga_media_text}<br>
+                <div style='background-color:{color}; color:white; text-align:center; 
+                             padding:4px 0; font-weight:bold; margin-top:6px; 
+                             border:2px solid black; border-radius:6px;'>
+                    {pred:.3f}
+                </div>
+            """
             folium.Marker(
                 location=(datos["latitud"], datos["longitud"]),
                 popup=folium.Popup(popup_texto, max_width=300),
@@ -292,20 +365,43 @@ def visualizar_ruta(coordenadas_ruta, puntos_medicion, tiempo_sin_trafico):
     folium.Marker(coordenadas_ruta[0], popup="Inicio", icon=folium.Icon(color="green", icon="play", prefix="fa")).add_to(mapa)
     folium.Marker(coordenadas_ruta[-1], popup="Destino", icon=folium.Icon(color="red", icon="flag-checkered", prefix="fa")).add_to(mapa)
 
-    penalizaciones = [penalizacion_por_carga(datos["prediccion"]) for datos in puntos_medicion.values()]
     carga_media = np.mean([datos["prediccion"] for datos in puntos_medicion.values()])
-    factor_penalizacion = np.mean(penalizaciones)
-    tiempo_con_trafico = tiempo_sin_trafico * factor_penalizacion
+
+    predicciones = [datos["prediccion"] for datos in puntos_medicion.values()]
+    predicciones_validas = [p for p in predicciones if p is not None]
+    generar_boxplot_superpuesto(predicciones)
+
+    with open("boxplot_superpuesto.png", "rb") as f:
+        img_base64 = base64.b64encode(f.read()).decode("utf-8")
 
     html_info = f"""
     <div style='position: fixed; top: 10px; left: 50px; z-index: 9999; background-color: white;
-                border: 2px solid #444; padding: 10px; border-radius: 8px; font-size: 14px;'>
-        ⏱️ <b>Tiempo estimado:</b> {tiempo_con_trafico:.1f} min<br>
-        🚗 <b>Tiempo sin tráfico:</b> {tiempo_sin_trafico:.1f} min<br>
-        📊 <b>Carga media:</b> {carga_media:.2f}
+                border: 2px solid #444; padding: 10px; border-radius: 8px; font-size: 16px;'>
+        <details open>
+            <summary style="font-size:18px; font-weight:bold; cursor:pointer;">📊 Información de Tráfico</summary>
+            <div style="margin-top: 8px;">
+                ⏱️ <b style='font-size: 18px;'>Tiempo sin tráfico:</b> {tiempo_sin_trafico:.1f} min<br>
+                🚗 <b style='font-size: 18px;'>Carga media:</b> {carga_media:.2f}<br>
+                <img src="data:image/png;base64,{img_base64}" style="width: 500px; margin-top: 12px;" />
+            </div>
+        </details>
+    </div>
+    <div style='position: fixed; top: 10px; right: 30px; z-index: 9999; background-color: white;
+                border: 2px solid #444; padding: 8px; border-radius: 8px; font-size: 14px;'>
+        <details>
+            <summary style="font-weight:bold; cursor:pointer;">🎨 Leyenda</summary>
+            <div style="margin-top: 5px;">
+                <span style="color:green; font-weight:bold;">●</span> Baja<br>
+                <span style="color:gold; font-weight:bold;">●</span> Moderada<br>
+                <span style="color:orange; font-weight:bold;">●</span> Alta<br>
+                <span style="color:red; font-weight:bold;">●</span> Muy Alta
+            </div>
+        </details>
     </div>
     """
+
     mapa.get_root().html.add_child(folium.Element(html_info))
+
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     nombre_archivo = f"ruta_mapa_{timestamp}.html"
