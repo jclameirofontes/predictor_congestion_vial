@@ -9,4 +9,3 @@ googlemaps
 geopy
 shapely
 matplotlib
-PIL
