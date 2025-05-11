@@ -211,6 +211,16 @@ def obtener_tiempo_sin_trafico(origen, destino):
         print(f"❌ Error al obtener tiempo sin tráfico (domingo 4AM): {e}")
     return None
 
+def color_por_carga(carga):
+    if carga <= 0.2:
+        return "green"
+    elif carga <= 0.3:
+        return "gold"
+    elif carga <= 0.5:
+        return "orange"
+    else:
+        return "red"
+            
 # Función para boxplot sobrepuesto con predicciones
 def generar_boxplot_superpuesto(cargas, ruta_base="carga_coloreada.png", salida="boxplot_superpuesto.png"):
     colores = [color_por_carga(c) for c in cargas]
