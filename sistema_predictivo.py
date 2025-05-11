@@ -186,16 +186,13 @@ def predecir_para_puntos(puntos_cercanos, datos_contexto):
 def obtener_tiempo_sin_trafico(origen, destino):
     from datetime import datetime
     try:
-        # Fecha actual
-        hoy = datetime.datetime.now()
+        hoy = datetime.now()
 
-        # Calcular cuántos días faltan para el próximo domingo
-        dias_hasta_domingo = (6 - hoy.weekday()) % 7  # weekday(): lunes=0, domingo=6
+        dias_hasta_domingo = (6 - hoy.weekday()) % 7
         if dias_hasta_domingo == 0:
-            dias_hasta_domingo = 7  # si hoy es domingo, ir al siguiente
-
-        # Crear datetime para el próximo domingo a las 4:00 a.m.
-        proximo_domingo = hoy + datetime.timedelta(days=dias_hasta_domingo)
+            dias_hasta_domingo = 7
+        
+        proximo_domingo = hoy + timedelta(days=dias_hasta_domingo)
         hora_baja = proximo_domingo.replace(hour=4, minute=0, second=0, microsecond=0)
 
         directions = gmaps.directions(
