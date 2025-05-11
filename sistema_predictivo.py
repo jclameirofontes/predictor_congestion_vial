@@ -14,6 +14,7 @@ from folium import DivIcon
 from shapely.geometry import Point
 from scipy.spatial import cKDTree
 from datetime import datetime, timedelta
+from PIL import Image
 
 
 API_KEY = "AIzaSyA2rbw0-kRC3bIoU3-ycgPGZ79zXN2RFvI"
