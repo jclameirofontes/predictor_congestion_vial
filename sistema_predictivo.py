@@ -45,18 +45,44 @@ def normalizar_variable(nombre, valor_original):
     minimo, maximo = rangos[nombre]
     return (valor_original - minimo) / (maximo - minimo)
 
-def usar_valor_o_defecto(valor, nombre_variable):
-    valores_por_defecto = {
-        "TEMPERATURA": 12.0,
-        "HUMEDAD": 70.0,
-        "PRESION": 946.0,
-        "RADIACION": 150.0,
-        "VELOCIDAD_VIENTO": 1.5,
-        "DIR_VIENTO": 180
-    }
+def usar_valor_o_defecto(valor, nombre_variable, hora_entera=None):
     if valor is None or str(valor).strip().upper() in ["NA", "NAN", ""]:
+        if nombre_variable == "RADIACION" and hora_entera is not None:
+            if hora_entera == 0 or hora_entera == 1 or hora_entera == 2 or hora_entera == 3 or hora_entera == 4 or hora_entera == 5 or hora_entera == 6 or hora_entera == 7 or hora_entera == 19 or hora_entera == 20 or hora_entera == 21 or hora_entera == 22 or hora_entera == 23:
+                return 1.0
+            elif hora_entera == 8:
+                return 23.0
+            elif hora_entera == 9:
+                return 135.0
+            elif hora_entera == 10:
+                return 289.0
+            elif hora_entera == 11:
+                return 406.0
+            elif hora_entera == 12:
+                return 486.0
+            elif hora_entera == 13:
+                return 489.0
+            elif hora_entera == 14:
+                return 430.0
+            elif hora_entera == 15:
+                return 326.0
+            elif hora_entera == 16:
+                return 185.0
+            elif hora_entera == 17:
+                return 60.0
+            elif hora_entera == 18:
+                return 5.0
+        valores_por_defecto = {
+            "TEMPERATURA": 12.0,
+            "HUMEDAD": 70.0,
+            "PRESION": 946.0,
+            "RADIACION": 150.0,
+            "VELOCIDAD_VIENTO": 1.5,
+            "DIR_VIENTO": 180
+        }
         return valores_por_defecto[nombre_variable]
     return valor
+
 
 def interpolar_puntos(p1, p2, distancia_minima):
     distancia_total = geodesic(p1, p2).meters
