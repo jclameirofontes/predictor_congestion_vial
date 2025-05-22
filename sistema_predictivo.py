@@ -456,7 +456,8 @@ def estimar_carga_para_ruta(origen, destino, hora="09:00", ES_ENTRE_SEMANA=1,
     if df_coordenadas_trafico is None:
         df_coordenadas_trafico = df_coordenadas_trafico_default
         print("📂 Usando df_coordenadas_trafico por defecto")
-
+   
+    hora_entera = int(hora.split(":")[0])
     sin_hora, cos_hora = hora_a_sin_cos(hora)
     TEMPERATURA = usar_valor_o_defecto(TEMPERATURA, "TEMPERATURA")
     HUMEDAD = usar_valor_o_defecto(HUMEDAD, "HUMEDAD")
