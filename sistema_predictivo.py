@@ -397,7 +397,6 @@ def visualizar_ruta(coordenadas_ruta, puntos_medicion, tiempo_sin_trafico):
                         width:32px;
                         height:32px;
                         line-height:32px;
-                        border: 2px solid black;
                         box-shadow: 0 0 3px #000;
                     ">
                         {grupo}
