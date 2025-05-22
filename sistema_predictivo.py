@@ -462,7 +462,7 @@ def estimar_carga_para_ruta(origen, destino, hora="09:00", ES_ENTRE_SEMANA=1,
     TEMPERATURA = usar_valor_o_defecto(TEMPERATURA, "TEMPERATURA")
     HUMEDAD = usar_valor_o_defecto(HUMEDAD, "HUMEDAD")
     PRESION = usar_valor_o_defecto(PRESION, "PRESION")
-    RADIACION = usar_valor_o_defecto(RADIACION, "RADIACION")
+    RADIACION = usar_valor_o_defecto(RADIACION, "RADIACION", hora_entera=hora_entera)
     VELOCIDAD_VIENTO = usar_valor_o_defecto(VELOCIDAD_VIENTO, "VELOCIDAD_VIENTO")
     DIR_VIENTO = usar_valor_o_defecto(DIR_VIENTO, "DIR_VIENTO")
     sin_dir_viento, cos_dir_viento = direccion_viento_a_sin_cos(DIR_VIENTO)
