@@ -436,10 +436,10 @@ def visualizar_ruta(coordenadas_ruta, puntos_medicion, tiempo_sin_trafico):
         <details open>
             <summary style="font-size:20px; font-weight:bold; cursor:pointer;">🎨 <b>Leyenda</b></summary>
             <div style="margin-top: 10px; line-height: 1.6;">
-                <span style="color:green; font-weight:bold; font-size:18px;">●</span> <b>Baja</b> < 0.2<br>
-                <span style="color:gold; font-weight:bold; font-size:18px;">●</span> <b>Moderada</b> 0.2 – 0.3<br>
-                <span style="color:orange; font-weight:bold; font-size:18px;">●</span> <b>Alta</b> 0.3 – 0.5<br>
-                <span style="color:red; font-weight:bold; font-size:18px;">●</span> <b>Muy Alta</b> > 0.5
+                <span style="color:green; font-weight:bold; font-size:18px;">●</span> <b>Baja</b> <0.2<br>
+                <span style="color:gold; font-weight:bold; font-size:18px;">●</span> <b>Moderada</b> 0.2-0.3<br>
+                <span style="color:orange; font-weight:bold; font-size:18px;">●</span> <b>Alta</b> 0.3-0.5<br>
+                <span style="color:red; font-weight:bold; font-size:18px;">●</span> <b>Muy Alta</b> >0.5
             </div>
         </details>
     </div>
