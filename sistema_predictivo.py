@@ -369,33 +369,41 @@ def visualizar_ruta(coordenadas_ruta, puntos_medicion, tiempo_sin_trafico):
             color = color_por_carga(pred)
             carga_media_text = f"{id_target:.3f}" if id_target is not None else "N/A"
             popup_texto = f"""
-                <b>{datos['nombre']}</b><br>
-                (ID: {id_punto})<br>
-                Grupo: {grupo}<br>
-                Carga media: {carga_media_text}<br>
-                <div style='background-color:{color}; color:white; text-align:center; 
-                             padding:4px 0; font-weight:bold; margin-top:6px; 
-                             border:2px solid black; border-radius:6px;'>
-                    {pred:.3f}
+                <div style='font-size: 16px; line-height: 1.5;'>
+                    <b style='font-size:18px'>{datos['nombre']}</b><br>
+                    <b>ID:</b> {id_punto}<br>
+                    <b>Grupo:</b> {grupo}<br>
+                    <b>Carga media:</b> {carga_media_text}<br>
+                    <div style='background-color:{color}; color:white; text-align:center;
+                                padding:6px 0; font-weight:bold; margin-top:6px;
+                                border:2px solid black; border-radius:6px; font-size:18px;'>
+                        {pred:.3f}
+                    </div>
                 </div>
             """
+
+            
             folium.Marker(
                 location=(datos["latitud"], datos["longitud"]),
-                popup=folium.Popup(popup_texto, max_width=300),
+                popup=folium.Popup(popup_texto, max_width=400),  # más ancho
                 icon=folium.DivIcon(html=f"""
                     <div style="
                         background-color:{color};
                         border-radius:50%;
                         color:white;
-                        font-size:10pt;
+                        font-size:14pt;  /* más grande */
                         font-weight:bold;
                         text-align:center;
-                        width:24px;
-                        height:24px;
-                        line-height:24px;">
+                        width:32px;
+                        height:32px;
+                        line-height:32px;
+                        border: 2px solid black;
+                        box-shadow: 0 0 3px #000;
+                    ">
                         {grupo}
                     </div>""")
             ).add_to(mapa)
+
 
     folium.Marker(coordenadas_ruta[0], popup="Inicio", icon=folium.Icon(color="green", icon="play", prefix="fa")).add_to(mapa)
     folium.Marker(coordenadas_ruta[-1], popup="Destino", icon=folium.Icon(color="red", icon="flag-checkered", prefix="fa")).add_to(mapa)
