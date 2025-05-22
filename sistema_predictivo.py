@@ -426,10 +426,10 @@ def visualizar_ruta(coordenadas_ruta, puntos_medicion, tiempo_sin_trafico):
         <details>
             <summary style="font-weight:bold; cursor:pointer;">🎨 Leyenda</summary>
             <div style="margin-top: 5px;">
-                <span style="color:green; font-weight:bold;">●</span> Baja<br>
-                <span style="color:gold; font-weight:bold;">●</span> Moderada<br>
-                <span style="color:orange; font-weight:bold;">●</span> Alta<br>
-                <span style="color:red; font-weight:bold;">●</span> Muy Alta
+                <span style="color:green; font-weight:bold;">●</span> Baja <0.2<br>
+                <span style="color:gold; font-weight:bold;">●</span> Moderada 0.2-0.3<br>
+                <span style="color:orange; font-weight:bold;">●</span> Alta 0.3-0.5<br>
+                <span style="color:red; font-weight:bold;">●</span> Muy Alta >0.5
             </div>
         </details>
     </div>
