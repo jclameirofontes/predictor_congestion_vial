@@ -54,7 +54,7 @@ with col1:
                         TEMPERATURA=None if temp.upper() == "NA" or temp.strip() == "" else float(temp),
                         HUMEDAD=None if humedad.upper() == "NA" or humedad.strip() == "" else float(humedad),
                         PRESION=None if presion.upper() == "NA" or presion.strip() == "" else float(presion),
-                        RADIACION=None if radiacion.upper() == "NA" or radiacion.strip() == "" else float(radiacion),
+                        RADIACION=(None if radiacion.upper() == "NA" or radiacion.strip() == "" else float(radiacion)),
                         VELOCIDAD_VIENTO=None if v_viento.upper() == "NA" or v_viento.strip() == "" else float(v_viento),
                         DIR_VIENTO=None if dir_viento.upper() == "NA" or dir_viento.strip() == "" else float(dir_viento),
                         PRECIPITA_BINARIA=lluvia_valor,
