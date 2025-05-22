@@ -410,30 +410,34 @@ def visualizar_ruta(coordenadas_ruta, puntos_medicion, tiempo_sin_trafico):
         img_base64 = base64.b64encode(f.read()).decode("utf-8")
 
     html_info = f"""
-    <div style='position: fixed; top: 10px; left: 50px; z-index: 9999; background-color: white;
-                border: 2px solid #444; padding: 10px; border-radius: 8px; font-size: 16px;'>
+    <div style='position: fixed; top: 20px; left: 20px; z-index: 9999; background-color: white;
+                border: 3px solid #222; padding: 16px; border-radius: 10px; font-size: 18px; width: 650px;'>
         <details open>
-            <summary style="font-size:18px; font-weight:bold; cursor:pointer;">📊 Información de Tráfico</summary>
-            <div style="margin-top: 8px;">
-                ⏱️ <b style='font-size: 18px;'>Tiempo sin tráfico:</b> {tiempo_sin_trafico:.1f} min<br>
-                🚗 <b style='font-size: 18px;'>Carga media:</b> {carga_media:.2f}<br>
-                <img src="data:image/png;base64,{img_base64}" style="width: 500px; margin-top: 12px;" />
+            <summary style="font-size:22px; font-weight:bold; cursor:pointer;">📊 <b>Información de Tráfico</b></summary>
+            <div style="margin-top: 12px; line-height: 1.6;">
+                <p>⏱️ <b>Tiempo sin tráfico:</b> <span style="font-size:20px;">{tiempo_sin_trafico:.1f} min</span></p>
+                <p>🚗 <b>Carga media:</b> <span style="font-size:20px;">{carga_media:.2f}</span></p>
+                <div style="text-align: center;">
+                    <img src="data:image/png;base64,{img_base64}" style="width: 600px; margin-top: 16px; border: 1px solid #ccc;" />
+                </div>
             </div>
         </details>
     </div>
-    <div style='position: fixed; top: 10px; right: 30px; z-index: 9999; background-color: white;
-                border: 2px solid #444; padding: 8px; border-radius: 8px; font-size: 14px;'>
-        <details>
-            <summary style="font-weight:bold; cursor:pointer;">🎨 Leyenda</summary>
-            <div style="margin-top: 5px;">
-                <span style="color:green; font-weight:bold;">●</span> Baja <0.2<br>
-                <span style="color:gold; font-weight:bold;">●</span> Moderada 0.2-0.3<br>
-                <span style="color:orange; font-weight:bold;">●</span> Alta 0.3-0.5<br>
-                <span style="color:red; font-weight:bold;">●</span> Muy Alta >0.5
+    
+    <div style='position: fixed; top: 20px; right: 20px; z-index: 9999; background-color: white;
+                border: 3px solid #222; padding: 16px; border-radius: 10px; font-size: 18px; width: 220px;'>
+        <details open>
+            <summary style="font-size:20px; font-weight:bold; cursor:pointer;">🎨 <b>Leyenda</b></summary>
+            <div style="margin-top: 10px; line-height: 1.6;">
+                <span style="color:green; font-weight:bold; font-size:18px;">●</span> <b>Baja</b> < 0.2<br>
+                <span style="color:gold; font-weight:bold; font-size:18px;">●</span> <b>Moderada</b> 0.2 – 0.3<br>
+                <span style="color:orange; font-weight:bold; font-size:18px;">●</span> <b>Alta</b> 0.3 – 0.5<br>
+                <span style="color:red; font-weight:bold; font-size:18px;">●</span> <b>Muy Alta</b> > 0.5
             </div>
         </details>
     </div>
     """
+
 
     mapa.get_root().html.add_child(folium.Element(html_info))
 
