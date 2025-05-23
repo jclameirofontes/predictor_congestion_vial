@@ -20,7 +20,7 @@ with col1:
         Completa los campos para estimar la carga de tráfico.  
         Los campos marcados con *️⃣ son obligatorios.
     """)
-    
+
     origen = st.text_input("📍 Dirección de Origen *", "")
     destino = st.text_input("🏁 Dirección de Destino *", "")
     hora = st.time_input("⏰ Hora de salida *", value=time(0, 0))
@@ -36,8 +36,10 @@ with col1:
     dir_viento = st.text_input("🧭 Dirección del viento (º) (entre 0 y 359)", "")
 
     st.markdown("---")
-    # Dentro del if st.button(...) 
-    if st.button("▶️ Estimar congestión"):
+    col_estimar, col_descargar = st.columns([2, 1])
+    run_prediction = col_estimar.button("▶️ Estimar congestión")
+
+    if run_prediction:
         if origen.strip() == "" or destino.strip() == "":
             st.error("Por favor, completa las direcciones de origen y destino.")
         else:
@@ -45,7 +47,7 @@ with col1:
                 try:
                     semana_valor = 1 if semana == "Sí" else 0
                     lluvia_valor = 1 if lluvia == "Sí" else 0
-    
+
                     _, puntos, ruta_html = estimar_carga_para_ruta(
                         origen=origen,
                         destino=destino,
@@ -60,33 +62,32 @@ with col1:
                         PRECIPITA_BINARIA=lluvia_valor,
                         df_coordenadas_trafico=None
                     )
-    
+
                     if os.path.exists(ruta_html):
                         with open(ruta_html, 'r', encoding='utf-8') as f:
                             html_content = f.read()
                             st.success("✅ Predicción completada. Mapa generado.")
                             with col2:
                                 html(html_content, height=1150)
-                                st.markdown("---")
-                                with open(ruta_html, "rb") as file:
-                                    st.download_button(
-                                        label="⬇️ Descargar Mapa HTML",
-                                        data=file,
-                                        file_name=os.path.basename(ruta_html),
-                                        mime="text/html"
-                                    )
+                        with col_descargar:
+                            with open(ruta_html, "rb") as file:
+                                st.download_button(
+                                    label="⬇️ Descargar Mapa HTML",
+                                    data=file,
+                                    file_name=os.path.basename(ruta_html),
+                                    mime="text/html"
+                                )
                     else:
                         st.error("No se encontró el archivo del mapa generado.")
                 except Exception as e:
                     st.error(f"Error al estimar la congestión: {e}")
-    
+
     else:
         with col2:
             if not os.path.exists("MAPA FINAL/temp_map.html"):
                 m = folium.Map(location=[40.4168, -3.7038], zoom_start=12)
                 m.save("MAPA FINAL/temp_map.html")
-    
+
             with open("MAPA FINAL/temp_map.html", 'r', encoding='utf-8') as f:
                 default_map = f.read()
                 html(default_map, height=1150)
-    
