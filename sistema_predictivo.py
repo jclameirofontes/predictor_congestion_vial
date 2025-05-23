@@ -420,14 +420,16 @@ def visualizar_ruta(coordenadas_ruta, puntos_medicion, tiempo_sin_trafico):
     <div style='position: fixed; top: 20px; left: 20px; z-index: 9999; background-color: white;
                 border: 3px solid #222; padding: 16px; border-radius: 10px; font-size: 18px; width: 650px;'>
         <details open>
-            <summary style="font-size:24px; font-weight:bold; text-align:center;">📊 Información de Tráfico</summary>
+            <summary style="font-size:24px; font-weight:bold; cursor:pointer;">
+                <div style="text-align:center;">📊 Información de Tráfico</div>
+            </summary>
             <div style="margin-top: 12px; line-height: 1.6; text-align:center;">
-                <div style="display:inline-block; padding:8px 16px; background-color:#f0f0f0;
-                            border:1px solid #ccc; border-radius:8px; margin-bottom:8px;">
+                <div style="display:inline-block; padding:10px 18px; background-color:#f0f0f0;
+                            border:1px solid #bbb; border-radius:8px; margin: 6px;">
                     ⏱️ <b>Tiempo sin tráfico:</b> <span style="font-size:20px;">{tiempo_sin_trafico:.1f} min</span>
                 </div><br>
-                <div style="display:inline-block; padding:8px 16px; background-color:{color_por_carga(carga_media)};
-                            border:2px solid black; border-radius:8px; color:white; font-weight:bold;">
+                <div style="display:inline-block; padding:10px 18px; background-color:{color_por_carga(carga_media)};
+                            border:2px solid black; border-radius:8px; color:white; font-weight:bold; margin: 6px;">
                     🚗 <b>Carga media:</b> <span style="font-size:20px;">{carga_media:.2f}</span>
                 </div>
                 <div style="text-align: center;">
@@ -438,9 +440,11 @@ def visualizar_ruta(coordenadas_ruta, puntos_medicion, tiempo_sin_trafico):
     </div>
     
     <div style='position: fixed; top: 20px; right: 20px; z-index: 9999; background-color: white;
-                border: 3px solid #222; padding: 16px; border-radius: 10px; font-size: 18px; width: 220px;'>
+                border: 3px solid #222; padding: 16px; border-radius: 10px; font-size: 18px; width: 240px;'>
         <details open>
-            <summary style="font-size:20px; font-weight:bold; text-align:center;">🎨 Leyenda</summary>
+            <summary style="font-size:20px; font-weight:bold; cursor:pointer;">
+                <div style="text-align:center;">🎨 Leyenda</div>
+            </summary>
             <div style="margin-top: 10px; line-height: 1.6; text-align:left;">
                 <span style="color:green; font-weight:bold; font-size:18px;">●</span> <b>Baja</b> <0.2<br>
                 <span style="color:gold; font-weight:bold; font-size:18px;">●</span> <b>Moderada</b> 0.2-0.3<br>
@@ -450,6 +454,7 @@ def visualizar_ruta(coordenadas_ruta, puntos_medicion, tiempo_sin_trafico):
         </details>
     </div>
     """
+
 
 
     mapa.get_root().html.add_child(folium.Element(html_info))
