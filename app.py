@@ -62,29 +62,19 @@ with col1:
                     )
     
                     if os.path.exists(ruta_html):
-                        st.success("✅ Predicción completada. Mapa generado.")
-                        with col2:
-                            st.markdown("### 🗺️ Vista previa del mapa:")
-                            ruta_url = "file://" + os.path.abspath(ruta_html).replace("\\", "/")
-                            html(f"""
-                                <iframe src="{ruta_url}" width="100%" height="600px" style="border:2px solid #444; border-radius:8px;"></iframe>
-                                <div style="text-align:center; margin-top: 10px;">
-                                    <a href="{ruta_url}" target="_blank" style="
-                                        display:inline-block;
-                                        padding: 12px 20px;
-                                        background-color: #007bff;
-                                        color: white;
-                                        font-size: 18px;
-                                        font-weight: bold;
-                                        text-decoration: none;
-                                        border-radius: 8px;
-                                        border: 2px solid #0056b3;
-                                    ">
-                                        🌐 Abrir mapa a pantalla completa
-                                    </a>
-                                </div>
-                            """, height=680)
-
+                        with open(ruta_html, 'r', encoding='utf-8') as f:
+                            html_content = f.read()
+                            st.success("✅ Predicción completada. Mapa generado.")
+                            with col2:
+                                html(html_content, height=1250)
+                                st.markdown("---")
+                                with open(ruta_html, "rb") as file:
+                                    st.download_button(
+                                        label="⬇️ Descargar Mapa HTML",
+                                        data=file,
+                                        file_name=os.path.basename(ruta_html),
+                                        mime="text/html"
+                                    )
                     else:
                         st.error("No se encontró el archivo del mapa generado.")
                 except Exception as e:
