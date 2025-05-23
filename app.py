@@ -66,7 +66,7 @@ with col1:
                             html_content = f.read()
                             st.success("✅ Predicción completada. Mapa generado.")
                             with col2:
-                                html(html_content, height=1250)
+                                html(html_content, height=1150)
                                 st.markdown("---")
                                 with open(ruta_html, "rb") as file:
                                     st.download_button(
@@ -88,5 +88,5 @@ with col1:
     
             with open("MAPA FINAL/temp_map.html", 'r', encoding='utf-8') as f:
                 default_map = f.read()
-                html(default_map, height=1250)
+                html(default_map, height=1150)
     
