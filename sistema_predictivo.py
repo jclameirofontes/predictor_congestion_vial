@@ -17,7 +17,7 @@ from datetime import datetime, timedelta
 from PIL import Image
 
 
-API_KEY = "AIzaSyA2rbw0-kRC3bIoU3-ycgPGZ79zXN2RFvI"
+API_KEY = "AIzaSyCvHe4yktaXZzR460Ki8nGUET-9Arm3Lps"
 gmaps = googlemaps.Client(key=API_KEY)
 
 ruta_modelos = "modelos"
